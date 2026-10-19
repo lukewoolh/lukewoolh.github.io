@@ -1,0 +1,732 @@
+<title>Stage 5 Food Tech Revision</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: one reading column under a sticky tab bar; each tab is one study activity. */
+:root{
+  --bg:#F2F5F2; --surface:#FFFFFF; --ink:#1B2420; --muted:#56645E; --line:#D5DDD8;
+  --accent:#7A2E5C; --accent-ink:#FFFFFF; --accent-soft:#F4E6EF;
+  --gold:#A86E00; --gold-soft:#FBF0D6;
+  --good:#22704A; --good-soft:#E1F1E7; --bad:#AE3229; --bad-soft:#F9E3E1;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121715; --surface:#1A211E; --ink:#E6EDE9; --muted:#9BAAA3; --line:#2D3833;
+  --accent:#E58CBE; --accent-ink:#1A0E15; --accent-soft:#3A2130;
+  --gold:#E9B54B; --gold-soft:#372C14;
+  --good:#6CC592; --good-soft:#18301F; --bad:#F2887E; --bad-soft:#3B201D; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121715; --surface:#1A211E; --ink:#E6EDE9; --muted:#9BAAA3; --line:#2D3833;
+  --accent:#E58CBE; --accent-ink:#1A0E15; --accent-soft:#3A2130;
+  --gold:#E9B54B; --gold-soft:#372C14;
+  --good:#6CC592; --good-soft:#18301F; --bad:#F2887E; --bad-soft:#3B201D; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:17px/1.6 var(--body);margin:0}
+.wrap{max-width:820px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(2rem,6vw,3.1rem);font-weight:800;letter-spacing:-.02em}
+h2{font-size:1.65rem;font-weight:800}
+h3{font-size:1.2rem;font-weight:600}
+p{margin:0}
+.label{font:500 .74rem/1.3 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.muted{color:var(--muted)}
+.stack{display:flex;flex-direction:column;gap:14px}
+.stack-lg{display:flex;flex-direction:column;gap:28px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+header.top{padding-block:36px 22px}
+header.top .stack{gap:12px}
+.lede{font-size:1.1rem;max-width:62ch}
+/* exam map */
+.map{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--line);margin-top:8px}
+.map div{background:var(--surface);padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.map b{font-family:var(--display);font-size:1.5rem;font-variant-numeric:tabular-nums}
+.map small{color:var(--muted);font-size:.85rem}
+@media (max-width:560px){.map{grid-template-columns:1fr}}
+/* tabs */
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+nav.tabs .wrap{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+nav.tabs button{flex:0 0 auto;font:600 .95rem var(--body);color:var(--muted);background:none;border:0;border-bottom:3px solid transparent;padding:14px 12px 11px;cursor:pointer}
+nav.tabs button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+main{padding-block:28px 80px}
+section[role="tabpanel"]{display:flex;flex-direction:column;gap:28px}
+/* generic */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:620px){.grid2{grid-template-columns:1fr}}
+button.btn{font:700 .95rem var(--body);border-radius:999px;padding:9px 18px;border:1.5px solid var(--accent);background:var(--accent);color:var(--accent-ink);cursor:pointer}
+button.btn.ghost{background:transparent;color:var(--accent)}
+button.btn:disabled{opacity:.45;cursor:not-allowed}
+button:focus-visible,textarea:focus-visible,select:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+textarea,input[type=text]{width:100%;font:16px/1.5 var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;resize:vertical}
+textarea{min-height:110px}
+select{font:16px var(--body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+ul.tight{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px}
+.verb{font-weight:700;color:var(--accent)}
+.pill{display:inline-block;font:500 .72rem/1 var(--mono);text-transform:uppercase;letter-spacing:.06em;padding:5px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.pill.gold{background:var(--gold-soft);color:var(--gold)}
+.pill.good{background:var(--good-soft);color:var(--good)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.tip{background:var(--gold-soft);border-radius:10px;padding:12px 14px}
+.tablebox{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 .74rem var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+/* strategies */
+.strat h3{font-size:1.08rem}
+.strat .doit{font-size:.92rem;color:var(--muted)}
+/* verbs */
+.verbs{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.verbcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;cursor:pointer;text-align:left;font:inherit;color:inherit;min-height:120px;display:flex;flex-direction:column;gap:6px}
+.verbcard b{font-family:var(--display);font-size:1.2rem;color:var(--accent)}
+.verbcard .def{font-size:.92rem}
+.verbcard[data-open="false"] .def{color:var(--muted);font-style:italic}
+/* notes */
+details.topic{background:var(--surface);border:1px solid var(--line);border-radius:12px}
+details.topic>summary{list-style:none;cursor:pointer;padding:16px 20px;display:flex;justify-content:space-between;gap:12px;align-items:center}
+details.topic>summary::-webkit-details-marker{display:none}
+details.topic>summary::after{content:"+";font:600 1.4rem var(--display);color:var(--accent)}
+details.topic[open]>summary::after{content:"–"}
+.topic-body{padding:0 20px 20px;display:flex;flex-direction:column;gap:14px}
+.recall{border:1.5px dashed var(--accent);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.notes{display:flex;flex-direction:column;gap:14px}
+.why{border-left:3px solid var(--gold);padding-left:12px}
+.cats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:560px){.cats{grid-template-columns:1fr}}
+.cats div{background:var(--bg);border-radius:10px;padding:12px}
+.spectrum{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+.spectrum div{padding:12px;display:flex;flex-direction:column;gap:4px;font-size:.92rem}
+.spectrum div:nth-child(1){background:var(--good-soft)}
+.spectrum div:nth-child(2){background:var(--gold-soft)}
+.spectrum div:nth-child(3){background:var(--accent-soft)}
+@media (max-width:560px){.spectrum{grid-template-columns:1fr}}
+/* quiz */
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:11px 14px;cursor:pointer;display:flex;gap:12px}
+.opt .k{font:500 .85rem var(--mono);color:var(--muted);padding-top:2px}
+.opt[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.opt.right{border-color:var(--good);background:var(--good-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.conf button{font:600 .85rem var(--body);background:var(--bg);color:var(--ink);border:1.5px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer}
+.conf button[aria-pressed="true"]{border-color:var(--gold);background:var(--gold-soft)}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);transition:width .25s}
+.feedback{border-radius:10px;padding:12px 14px}
+.feedback.ok{background:var(--good-soft)} .feedback.no{background:var(--bad-soft)}
+.score{font:800 3rem/1 var(--display);font-variant-numeric:tabular-nums}
+/* flashcards */
+.flash{perspective:1200px;cursor:pointer;min-height:220px;border:0;background:none;padding:0;font:inherit;color:inherit;width:100%}
+.flash-inner{position:relative;min-height:220px;transition:transform .45s;transform-style:preserve-3d}
+.flash[data-flipped="true"] .flash-inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;border:1px solid var(--line);background:var(--surface);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;padding:22px;text-align:center}
+.face.back{transform:rotateY(180deg);background:var(--accent-soft)}
+.face .term{font:800 1.7rem/1.2 var(--display)}
+@media (prefers-reduced-motion:reduce){.flash-inner,.bar i{transition:none}}
+.boxes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.boxes div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center}
+.boxes b{font:800 1.5rem var(--display);font-variant-numeric:tabular-nums;display:block}
+/* short answer */
+.marks{font:500 .8rem var(--mono);background:var(--ink);color:var(--bg);border-radius:6px;padding:3px 8px;white-space:nowrap}
+.check{display:flex;gap:10px;align-items:flex-start}
+.check input{margin-top:5px;width:18px;height:18px;accent-color:var(--accent);flex:0 0 auto}
+.model{background:var(--bg);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:600 .9rem var(--body);border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 14px;cursor:pointer}
+.chip[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.timer{font:800 2.2rem/1 var(--display);font-variant-numeric:tabular-nums}
+.teel{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 12px;align-items:start}
+.teel b{font:800 1.2rem var(--display);color:var(--accent);width:1.4em}
+footer{color:var(--muted);font-size:.85rem;padding-block:0 40px}
+</style>
+
+<header class="top"><div class="wrap stack">
+  <span class="label">Stage 5 Food Technology · Yearly exam 2026</span>
+  <h1>Food for Special Occasions revision</h1>
+  <p class="lede">Reading notes feels like learning, but pulling ideas out of your memory is what makes them stick. Every activity here asks you to <b>try first, then check</b>.</p>
+  <div class="map" aria-label="Exam structure">
+    <div><span class="label">Section I · Multiple choice</span><b>15 marks</b><small>Questions 1–15 · about 20 min</small></div>
+    <div><span class="label">Section II · Short answer</span><b>25 marks</b><small>Questions 16–20 · about 30 min</small></div>
+    <div><span class="label">Section III · Essay</span><b>15 marks</b><small>Question 21 · about 30 min</small></div>
+  </div>
+  <p class="muted" style="font-size:.9rem">Total 55 marks · 5 min reading time · 80 min working time</p>
+</div></header>
+
+<nav class="tabs" aria-label="Revision activities"><div class="wrap" role="tablist">
+  <button role="tab" id="t-start" aria-controls="start" aria-selected="true">Start here</button>
+  <button role="tab" id="t-notes" aria-controls="notes" aria-selected="false">Topic notes</button>
+  <button role="tab" id="t-quiz" aria-controls="quiz" aria-selected="false">Quiz</button>
+  <button role="tab" id="t-cards" aria-controls="cards" aria-selected="false">Flashcards</button>
+  <button role="tab" id="t-short" aria-controls="short" aria-selected="false">Short answers</button>
+  <button role="tab" id="t-essay" aria-controls="essay" aria-selected="false">Essay</button>
+</div></nav>
+
+<main class="wrap">
+
+<!-- ============ START ============ -->
+<section role="tabpanel" id="start" aria-labelledby="t-start">
+  <div class="stack">
+    <h2>How to revise so it sticks</h2>
+    <p class="muted">These six strategies come from research on how memory works. Each one is built into a part of this page.</p>
+  </div>
+  <div class="grid2">
+    <div class="card strat"><span class="pill">Retrieval practice</span><h3>Test yourself before you reread</h3><p>Recalling information strengthens the memory far more than reading it again.</p><p class="doit">Here: the brain-dump box at the top of every topic, the quiz and the flashcards.</p></div>
+    <div class="card strat"><span class="pill">Spaced practice</span><h3>Little and often</h3><p>Four 20-minute sessions across a week beat one 80-minute cram the night before.</p><p class="doit">Here: the flashcards bring back the ones you find hard more often. Use the plan below.</p></div>
+    <div class="card strat"><span class="pill">Interleaving</span><h3>Mix the topics</h3><p>Switching between topics trains you to work out <i>which</i> idea a question needs, exactly like the exam.</p><p class="doit">Here: the quiz shuffles every topic together by default.</p></div>
+    <div class="card strat"><span class="pill">Elaboration</span><h3>Ask "why?" and "how?"</h3><p>Linking a fact to a reason builds a web of connections, so one clue unlocks the rest.</p><p class="doit">Here: the yellow "Ask yourself" questions in each topic.</p></div>
+    <div class="card strat"><span class="pill">Dual coding</span><h3>Words plus pictures</h3><p>Turn notes into tables, diagrams and timelines. Two kinds of memory are better than one.</p><p class="doit">Here: the packaging table, celebration grid and product development scale. Redraw them from memory.</p></div>
+    <div class="card strat"><span class="pill">Concrete examples</span><h3>Every idea needs an example</h3><p>Markers reward examples. "Glass protects food" is weak. "A glass jar keeps jam visible and can be hot-filled" is strong.</p><p class="doit">Here: the short-answer model answers show what a full-mark example looks like.</p></div>
+  </div>
+
+  <div class="stack">
+    <h2>Know your command verbs</h2>
+    <p class="muted">The verb tells you how much to write. Say what each one means out loud, then tap the card to check.</p>
+  </div>
+  <div class="verbs" id="verbs"></div>
+  <div class="tip"><b>Mark rule of thumb:</b> one well-explained point with an example is usually worth about 1 mark in an <span class="verb">outline</span> question and 2 marks in a <span class="verb">discuss</span> or <span class="verb">explain</span> question.</div>
+
+  <div class="stack">
+    <h2>A 7-day revision plan</h2>
+    <div class="tablebox"><table>
+      <thead><tr><th>Day</th><th>Do this (20–30 min)</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Brain-dump every topic in Topic notes, then check. Note what you forgot.</td></tr>
+        <tr><td>2</td><td>Full mixed quiz. Flashcards: all cards once.</td></tr>
+        <tr><td>3</td><td>Short answers Q16 and Q17 under time (about 12 min). Self-mark with the checklist.</td></tr>
+        <tr><td>4</td><td>Flashcards: "Didn't know" and "Shaky" piles only. Short answers Q18–Q20.</td></tr>
+        <tr><td>5</td><td>Essay: plan with the TEEL builder, then write it in 30 minutes using the timer.</td></tr>
+        <tr><td>6</td><td>Redo only the quiz questions you missed. Redraw the three diagrams from memory.</td></tr>
+        <tr><td>7</td><td>Light review: flashcards, command verbs, and one essay plan from memory. Sleep well.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="card"><span class="label">Your progress on this device</span><div id="progress" class="row"></div></div>
+</section>
+
+<!-- ============ NOTES ============ -->
+<section role="tabpanel" id="notes" aria-labelledby="t-notes" hidden>
+  <div class="stack">
+    <h2>Topic notes</h2>
+    <p class="muted">Open a topic and write everything you remember in the brain-dump box <b>before</b> showing the notes. Then compare: what did you miss? Those gaps are what to study.</p>
+  </div>
+  <div class="stack" id="topics"></div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section role="tabpanel" id="quiz" aria-labelledby="t-quiz" hidden>
+  <div class="stack">
+    <h2>Mixed quiz</h2>
+    <p class="muted">Practice questions on the same content as Section I, worded differently so you learn the idea, not the answer. Before you check, say how sure you are. Learning which answers you <i>felt</i> sure about but got wrong is the most useful thing a quiz can show you.</p>
+  </div>
+  <div class="card" id="quizbox"></div>
+</section>
+
+<!-- ============ FLASHCARDS ============ -->
+<section role="tabpanel" id="cards" aria-labelledby="t-cards" hidden>
+  <div class="stack">
+    <h2>Flashcards</h2>
+    <p class="muted">Say the definition out loud before you flip. Be honest when you rate yourself: cards you don't know come back sooner.</p>
+  </div>
+  <div class="row"><label for="fc-topic" class="label">Topic</label><select id="fc-topic"></select><button class="btn ghost" id="fc-reset">Reset piles</button></div>
+  <div class="boxes" id="fc-boxes"></div>
+  <div id="fc-area" class="stack"></div>
+</section>
+
+<!-- ============ SHORT ANSWER ============ -->
+<section role="tabpanel" id="short" aria-labelledby="t-short" hidden>
+  <div class="stack">
+    <h2>Short-answer practice</h2>
+    <p class="muted">These are the Section II questions from your exam preparation sheet. Write your answer first. Then tick the marking points you covered and compare with the model answer. Your drafts save on this device.</p>
+  </div>
+  <div class="stack-lg" id="shortlist"></div>
+</section>
+
+<!-- ============ ESSAY ============ -->
+<section role="tabpanel" id="essay" aria-labelledby="t-essay" hidden>
+  <div class="card">
+    <span class="label">Question 21 · 15 marks · about 30 minutes</span>
+    <p style="font-size:1.08rem">When planning a menu for a special occasion it is important to make considerations to ensure success of the event and to ensure the safety and comfort of the guests attending.</p>
+    <p style="font-size:1.08rem"><b><span class="verb">Explain</span> how THREE menu planning considerations for special occasions can determine the success of an event.</b></p>
+  </div>
+
+  <div class="stack">
+    <h3>Step 1 · Decode the question</h3>
+    <ul class="tight">
+      <li><span class="verb">Explain</span> means relate cause and effect. For each consideration, say <b>how</b> and <b>why</b> it makes the event succeed or fail.</li>
+      <li><b>THREE</b> considerations. Write one paragraph for each. Writing about five thin ones scores lower than three deep ones.</li>
+      <li>Keep coming back to <b>success</b>, <b>safety</b> and <b>comfort of guests</b>. These words are your link-back.</li>
+    </ul>
+  </div>
+
+  <div class="stack">
+    <h3>Step 2 · Choose your three considerations</h3>
+    <div class="chips" id="cons"></div>
+    <div id="cons-info" class="stack"></div>
+  </div>
+
+  <div class="stack">
+    <h3>Step 3 · Plan each paragraph with TEEL</h3>
+    <div class="teel"><b>T</b><p><b>Topic sentence.</b> Name the consideration and state that it affects the success of the event.</p><b>E</b><p><b>Explain.</b> How and why does it affect the event? Use cause-and-effect linking words.</p><b>E</b><p><b>Example.</b> A specific dish, guest or situation at a specific occasion.</p><b>L</b><p><b>Link.</b> Return to success, safety or guest comfort.</p></div>
+    <div class="tip"><b>Cause-and-effect words:</b> as a result · therefore · this means that · consequently · which leads to · because · so that · if… then…</div>
+    <div id="teel-plans" class="stack"></div>
+  </div>
+
+  <div class="stack">
+    <h3>Step 4 · Read a model paragraph</h3>
+    <div class="model">
+      <span class="label">Model paragraph · health status of guests</span>
+      <p><b>[T]</b> The health status and dietary needs of guests is a key menu planning consideration because it directly affects guest safety and comfort. <b>[E]</b> If a host does not find out about allergies, intolerances or medical conditions before planning, a guest could be served a food that causes a serious reaction. As a result, the event could end with a medical emergency rather than a celebration. Planning for these needs also means every guest has something they can enjoy, so no one feels left out. <b>[E]</b> For example, at a 16th birthday party where one guest has a peanut allergy and another has coeliac disease, the host could replace a satay chicken skewer with a lemon and herb version, choose a flourless chocolate cake, and label dishes clearly so guests can choose safely. Separate utensils would prevent cross-contamination. <b>[L]</b> Therefore, considering guests' health status makes the event both safe and inclusive, which is essential for it to be a success.</p>
+    </div>
+  </div>
+
+  <div class="stack">
+    <h3>Step 5 · Write it under exam conditions</h3>
+    <div class="card">
+      <div class="row" style="justify-content:space-between"><span class="timer" id="timer">30:00</span><div class="row"><button class="btn" id="tm-start">Start</button><button class="btn ghost" id="tm-reset">Reset</button></div></div>
+      <p class="muted" style="font-size:.9rem">Aim for: 2–3 min planning, about 8 min per paragraph, 2 min for an introduction and conclusion, and a final check.</p>
+      <label class="label" for="essay-draft">Your essay</label>
+      <textarea id="essay-draft" style="min-height:320px" placeholder="Introduction: name your three considerations…"></textarea>
+      <p class="muted" style="font-size:.85rem"><span id="wc">0</span> words · a strong 15-mark response is usually 450–650 words</p>
+    </div>
+  </div>
+
+  <div class="stack">
+    <h3>Step 6 · Self-assess</h3>
+    <p class="muted">A practice guide to help you judge your essay. Your teacher's marking criteria may differ.</p>
+    <div class="tablebox"><table>
+      <thead><tr><th>Marks</th><th>A response in this range…</th></tr></thead>
+      <tbody>
+        <tr><td>13–15</td><td>Clearly explains how and why three considerations determine success. Strong cause and effect throughout, detailed relevant examples, logical TEEL structure, correct food technology terms.</td></tr>
+        <tr><td>10–12</td><td>Explains three considerations with some cause and effect and relevant examples. Mostly well structured.</td></tr>
+        <tr><td>7–9</td><td>Describes considerations with limited explanation of their effect on success. Some examples.</td></tr>
+        <tr><td>4–6</td><td>Outlines or lists considerations with few examples or little explanation.</td></tr>
+        <tr><td>1–3</td><td>Identifies one or more considerations.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+</main>
+<footer class="wrap">Practice material for the Stage 5 Food Technology yearly exam. Progress, drafts and flashcard piles are saved in this browser only.</footer>
+
+<script>
+(function(){
+/* ---------- storage ---------- */
+const KEY='st5ft-revision-v1';
+let S={fc:{},drafts:{},quizBest:null,quizRuns:0,ticks:{}};
+try{const r=localStorage.getItem(KEY); if(r) S=Object.assign(S,JSON.parse(r));}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+const $=s=>document.querySelector(s);
+const el=(tag,attrs={},html)=>{const n=document.createElement(tag);for(const k in attrs){if(k==='class')n.className=attrs[k];else n.setAttribute(k,attrs[k]);}if(html!==undefined)n.innerHTML=html;return n;};
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+
+/* ---------- tabs ---------- */
+const tabs=[...document.querySelectorAll('[role=tab]')];
+function show(id){tabs.forEach(t=>{const on=t.getAttribute('aria-controls')===id;t.setAttribute('aria-selected',on);document.getElementById(t.getAttribute('aria-controls')).hidden=!on;});
+  if(id==='start')renderProgress();}
+tabs.forEach(t=>t.addEventListener('click',()=>{show(t.getAttribute('aria-controls'));try{history.replaceState(null,'','#'+t.getAttribute('aria-controls'));}catch(e){}window.scrollTo({top:document.querySelector('nav.tabs').offsetTop,behavior:'auto'});}));
+const h=location.hash.slice(1); if(tabs.some(t=>t.getAttribute('aria-controls')===h))show(h);
+
+/* ---------- topics ---------- */
+const TOPICS={nutrition:'Nutrition and diet',additives:'Food additives and presentation',packaging:'Packaging',labelling:'Food labelling',development:'Food product development',celebrations:'Food and celebrations',menu:'Menu planning',skills:'Exam skills'};
+
+/* ---------- command verbs ---------- */
+const VERBS=[
+ ['Identify','Recognise and name.','"Identify a cultural celebration" → Chinese New Year.'],
+ ['Recall','Present remembered ideas, facts or experiences.','List three reasons for celebrating in each category.'],
+ ['Outline','Sketch in general terms; indicate the main features.','One clear sentence per point.'],
+ ['Describe','Provide characteristics and features.','What is it like? Ingredients, properties, how it is made.'],
+ ['Explain','Relate cause and effect; make the relationships between things evident; provide why and/or how.','Use "because", "as a result", "therefore".'],
+ ['Discuss','Identify issues and provide points for and/or against.','Give the benefit, then a limitation.']
+];
+const vb=$('#verbs');
+VERBS.forEach(([v,d,ex])=>{const b=el('button',{class:'verbcard','data-open':'false',type:'button'});
+ b.innerHTML=`<b>${v}</b><span class="def">Tap to check your definition</span>`;
+ b.addEventListener('click',()=>{const o=b.dataset.open==='true';b.dataset.open=!o;b.querySelector('.def').innerHTML=o?'Tap to check your definition':`${d}<br><span class="muted">${ex}</span>`;});vb.appendChild(b);});
+
+/* ---------- notes content ---------- */
+const NOTES=[
+{id:'nutrition',prompt:'What does each nutrient do? Which foods prevent osteoporosis? What causes obesity? How has the Australian diet changed?',html:`
+<div class="tablebox"><table><thead><tr><th>Nutrient</th><th>Main job</th><th>Good sources</th></tr></thead><tbody>
+<tr><td>Protein</td><td>Growth and repair of body cells</td><td>Meat, fish, eggs, legumes, dairy</td></tr>
+<tr><td>Carbohydrates</td><td>Main source of energy; fibre adds bulk for digestion</td><td>Bread, rice, pasta, fruit, vegetables</td></tr>
+<tr><td>Lipids (fats)</td><td>Concentrated energy, insulation, fat-soluble vitamins</td><td>Oils, butter, nuts, avocado</td></tr>
+<tr><td>Water</td><td>About 60% of body weight. Transports nutrients, controls temperature, removes waste</td><td>Water, milk, fruit, vegetables</td></tr>
+<tr><td>Calcium (mineral)</td><td>Builds strong bones and teeth; prevents osteoporosis (weak, brittle bones)</td><td>Milk, cheese, yoghurt, canned fish with bones</td></tr>
+</tbody></table></div>
+<ul class="tight">
+<li><b>Obesity</b>: a diet-related disorder caused when <b>energy input is greater than energy output</b> over a long time. The extra energy is stored as body fat.</li>
+<li><b>Other diet-related disorders</b>: type 2 diabetes (linked to excess weight and sugar), cardiovascular disease (saturated fat, salt), dehydration (too little water).</li>
+<li><b>Early white settlement (1788)</b>: poor nutrition because there was not enough food. European crops failed in unfamiliar soil and climate, so settlers relied on salted meat, flour and rations, with few fresh fruits and vegetables (scurvy).</li>
+<li><b>Australian diet since the 1980s</b>: more foods from a variety of cultures (migration), more fast food and more convenience foods (busier lifestyles, more working parents).</li>
+</ul>`,why:['Why does a teenager need more protein than an adult relative to body size?','How does drinking milk as a teenager help you at age 70?','Why would working parents buy more convenience food?']},
+{id:'additives',prompt:'What is a garnish? What does a humectant do? What do preservatives do? Name two other additive types.',html:`
+<ul class="tight">
+<li><b>Garnish</b>: an edible food trimming used to enhance the appearance of a dish, e.g. a lemon wedge and dill on grilled fish, chopped parsley on soup. (Sweet dishes are usually "decorated".)</li>
+<li><b>Humectant</b>: an additive that <b>attracts and holds moisture</b>, controlling moisture levels so baked products stay soft and do not dry out, e.g. glycerol (422) in icing and cakes, sorbitol (420). Honey is a natural humectant.</li>
+<li><b>Preservative</b>: slows down spoilage and deterioration by stopping the growth of micro-organisms such as mould and bacteria, e.g. sorbic acid (200) in cheese, sulphur dioxide (220) in dried fruit.</li>
+<li><b>Other additives</b>: emulsifiers (keep oil and water mixed, e.g. lecithin 322), thickeners (change texture and consistency of gravies), flavour enhancers (boost flavour, e.g. MSG 621), colours, antioxidants (stop fats going rancid).</li>
+</ul>
+<div class="tip"><b>Exam trap:</b> a humectant controls <i>moisture</i>. A thickener changes <i>texture</i>. A flavour enhancer boosts <i>taste</i>. A preservative controls <i>mould and bacteria</i>.</div>`,why:['Why would a packaged muffin need a humectant but a fresh bakery muffin might not?','How does a garnish affect how much a guest enjoys a meal at a special occasion?']},
+{id:'packaging',prompt:'List the four functions of packaging. Name five packaging materials with one advantage and one disadvantage each. What would you package jam, pizza sauce and fresh pasta in?',html:`
+<div class="cats">
+<div><span class="label">Contain</span><p>Holds food in set amounts for transport, storage and sale, e.g. milk in a 2 L bottle.</p></div>
+<div><span class="label">Protect</span><p>Shields from crushing, dirt, pests and tampering, e.g. egg cartons, tamper-evident seals.</p></div>
+<div><span class="label">Preserve</span><p>Extends shelf life by keeping out air, light, moisture and microbes, e.g. canning, vacuum packing.</p></div>
+</div>
+<div class="cats" style="grid-template-columns:minmax(0,1fr)"><div><span class="label">Promote and inform</span><p>Branding and design attract buyers. The label gives legally required information such as ingredients, allergens and use-by dates.</p></div></div>
+<div class="tablebox"><table><thead><tr><th>Material</th><th>Advantages</th><th>Disadvantages</th><th>Used for</th></tr></thead><tbody>
+<tr><td><b>Glass</b></td><td>Contents clearly visible; does not react with food; can be hot-filled and vacuum sealed; reusable and recyclable</td><td>Heavy; breaks easily</td><td>Jam, pizza sauce, baby food</td></tr>
+<tr><td><b>Metal (cans)</b></td><td>Strong; airtight and light-proof; can be heat-processed for long shelf life</td><td>Cannot see food; heavier than plastic</td><td>Canned tomatoes, soup, tuna</td></tr>
+<tr><td><b>Plastic</b></td><td>Light; cheap; easily moulded into many shapes; can be clear</td><td>Some types not recyclable; environmental waste</td><td>Yoghurt tubs, fresh pasta trays, bottles</td></tr>
+<tr><td><b>Laminates</b></td><td>Layers (plastic, foil, paper) combine strengths; light; good barrier; can be vacuum packed</td><td>Layers are hard to separate and recycle</td><td>Sauce pouches, long-life milk cartons, chip bags</td></tr>
+<tr><td><b>Paper and cardboard</b></td><td>Cheap; easy to print on; recyclable and biodegradable</td><td>Weak when wet unless coated</td><td>Cereal boxes, flour bags, pizza boxes</td></tr>
+</tbody></table></div>
+<ul class="tight">
+<li><b>Strawberry jam</b>: glass jar with a metal lid. Hot-filled, so a vacuum seal forms as it cools; visible, inert to acidic fruit, resealable.</li>
+<li><b>Pizza sauce</b>: glass jar, can, or laminated foil pouch. All are airtight and can be heat-treated.</li>
+<li><b>Fresh pasta</b>: plastic tray heat-sealed with a laminated plastic film, often with modified atmosphere packaging (air replaced with gases that slow mould). Kept refrigerated.</li>
+</ul>`,why:['Why is glass a good choice for jam but a poor choice for a school lunch box drink?','How does packaging help a food manufacturer sell more product?','Packaging creates waste. How have manufacturers responded to environmental concerns?']},
+{id:'labelling',prompt:'What must appear on a food label by law in Australia? In what order are ingredients listed? What is NOT a legal requirement?',html:`
+<p>Labelling requirements are set by the <b>Food Standards Code</b> (Food Standards Australia New Zealand, FSANZ). By law, most packaged foods must show:</p>
+<ul class="tight">
+<li>Name and description of the food</li>
+<li>List of ingredients in <b>descending order by weight</b> (largest amount first)</li>
+<li>Allergen declaration, e.g. "Contains: milk, egg, peanut"</li>
+<li>Date marking: <b>use-by</b> (safety) or <b>best-before</b> (quality)</li>
+<li>Nutrition information panel (NIP)</li>
+<li>Name and Australian address of the manufacturer or supplier</li>
+<li>Lot identification, net weight or volume, storage directions, country of origin</li>
+</ul>
+<div class="tip"><b>Not legal requirements:</b> sales promotions (e.g. "win a trip!"), recipes, competitions, celebrity endorsements. These are marketing, part of the <i>promote</i> function.</div>`,why:['Why are allergens listed separately when they are already in the ingredients list?','Why does a use-by date matter more for fresh pasta than for dried pasta?']},
+{id:'development',prompt:'Name and describe the three types of food product development. What four market concerns lead to new products? What is a target market?',html:`
+<div class="spectrum">
+<div><span class="label">Least new</span><b>Line extension</b><p>A new variation of an existing product: a new flavour, size or format, e.g. a new flavour of an existing biscuit brand.</p></div>
+<div><span class="label">Copied</span><b>Me-too (copycat)</b><p>Copies an already successful product from another company, e.g. a supermarket's own-brand version of a popular cereal. Can be very successful.</p></div>
+<div><span class="label">Most new</span><b>New to the world</b><p>A completely new product that has never existed, often from new technology, e.g. the first microwave popcorn.</p></div>
+</div>
+<p><b>Market concerns that drive new products</b></p>
+<ul class="tight">
+<li><b>Health</b>: consumers want reduced fat, salt and sugar, gluten-free or high-fibre foods.</li>
+<li><b>Environment</b>: demand for sustainable, recyclable packaging and plant-based foods.</li>
+<li><b>Cost</b>: consumers want cheaper options, e.g. home-brand products.</li>
+<li><b>Technology</b>: new processes create new products, e.g. microwave meals, long-life (UHT) milk, modified atmosphere packaging.</li>
+<li>Also: convenience and busy lifestyles, cultural diversity.</li>
+</ul>
+<p><b>Target market</b>: the specific group of people for whom a product is intended, e.g. a lunchbox snack aimed at parents of primary school children.</p>`,why:['Why is a me-too product less risky for a company than a new-to-the-world product?','How did microwave ovens lead to new food products?','Pick a product in your pantry. Which market concern was it made for?']},
+{id:'celebrations',prompt:'What are the three categories of celebration? Give three examples of each. Choose one cultural celebration and describe its foods: ingredients, preparation and significance.',html:`
+<div class="cats">
+<div><span class="label">Religious</span><p>Easter, Christmas, Ramadan and Eid, Passover, Diwali</p></div>
+<div><span class="label">Historical</span><p>Australia Day, Anzac Day, Thanksgiving</p></div>
+<div><span class="label">Social</span><p>Birthdays, anniversaries, weddings</p></div>
+</div>
+<p><b>Case studies</b> (learn one in depth for Question 17)</p>
+<div class="stack">
+<div class="model"><span class="label">Greek · New Year (St Basil's Day, 1 January)</span><p><b>Vasilopita</b>: a sweet bread or cake made with flour, butter, sugar, eggs, orange zest and sometimes mahlepi spice. A coin is wrapped in foil and hidden in the batter before baking. On New Year's Day it is cut and shared; whoever finds the coin is said to have good luck all year. The first slice is often set aside for St Basil or the household.</p></div>
+<div class="model"><span class="label">Chinese · Chinese New Year (Spring Festival)</span><p><b>Dumplings (jiaozi)</b>: wheat-flour wrappers filled with pork mince, cabbage, ginger and spring onion, folded into the shape of old gold ingots, then boiled, steamed or pan-fried. Families make them together on New Year's Eve. They symbolise <b>wealth</b>. A <b>whole steamed fish</b> stands for surplus, <b>long noodles</b> for long life, and <b>mandarins</b> for gold and luck.</p></div>
+<div class="model"><span class="label">Greek Orthodox · Easter</span><p><b>Red-dyed eggs</b> (boiled, then dyed red to represent the blood of Christ and new life) are cracked together in a game. <b>Tsoureki</b> is a sweet braided yeast bread flavoured with mahlepi and mastiha. <b>Lamb</b> roasted on a spit represents the Lamb of God and ends 40 days of fasting from meat.</p></div>
+<div class="model"><span class="label">Muslim · Ramadan and Eid al-Fitr</span><p>During Ramadan, Muslims fast from dawn to sunset. The fast is broken at <b>iftar</b> with <b>dates and water</b>, following the tradition of the Prophet Muhammad. Eid al-Fitr marks the end of Ramadan with shared feasts and sweets such as <b>ma'amoul</b>: semolina pastries filled with dates or nuts, shaped in wooden moulds and baked.</p></div>
+</div>`,why:['Why do so many celebration foods have a symbolic meaning?','How does sharing food bring people together at a celebration?','Why do many religious celebrations involve fasting before feasting?']},
+{id:'menu',prompt:'List as many menu planning considerations for a special occasion as you can. For each one, explain how it could make the event succeed or fail.',html:`
+<div class="tablebox"><table><thead><tr><th>Consideration</th><th>How it affects success</th></tr></thead><tbody>
+<tr><td><b>Type of occasion</b></td><td>Sets the formality, theme, service style and dishes. A formal wedding suits a plated three-course meal; a child's birthday suits finger food. The wrong style makes guests uncomfortable.</td></tr>
+<tr><td><b>Time of year</b></td><td>Seasonal produce is fresher, tastier and cheaper. Hot weather suits cold dishes and needs careful refrigeration to keep food out of the temperature danger zone (5–60 °C).</td></tr>
+<tr><td><b>Available resources</b></td><td>Budget, facilities (oven and fridge space), equipment, staff and their skills, and time. A menu that needs more oven space than you have will be late or poorly cooked.</td></tr>
+<tr><td><b>Health status of guests</b></td><td>Allergies, intolerances (coeliac), conditions (diabetes), and religious or ethical needs (halal, kosher, vegetarian). Ignoring them risks guest safety.</td></tr>
+<tr><td>Number and age of guests</td><td>Determines quantities and portion sizes, and suitable foods for children or the elderly.</td></tr>
+</tbody></table></div>`,why:['What would happen if a host planned a hot roast for an outdoor event in January?','How could a limited budget still produce a successful menu?']}
+];
+const tp=$('#topics');
+NOTES.forEach(n=>{
+ const d=el('details',{class:'topic',id:'topic-'+n.id});
+ d.innerHTML=`<summary><h3>${TOPICS[n.id]}</h3></summary>
+ <div class="topic-body">
+  <div class="recall"><span class="label">Brain dump first</span><p>${n.prompt}</p>
+   <textarea id="bd-${n.id}" aria-label="Brain dump for ${TOPICS[n.id]}" placeholder="Write everything you can remember. Don't look!"></textarea>
+   <div class="row"><button class="btn" type="button">Show notes and check</button></div></div>
+  <div class="notes" hidden>${n.html}
+   <div class="why tip"><span class="label">Ask yourself</span><ul class="tight">${n.why.map(w=>`<li>${w}</li>`).join('')}</ul></div>
+   <p class="muted" style="font-size:.9rem">Close the notes and redraw any table or diagram from memory. Then go back and check.</p>
+  </div></div>`;
+ const ta=d.querySelector('textarea'); ta.value=S.drafts['bd-'+n.id]||'';
+ ta.addEventListener('input',()=>{S.drafts['bd-'+n.id]=ta.value;save();});
+ const btn=d.querySelector('.recall button'), notes=d.querySelector('.notes');
+ btn.addEventListener('click',()=>{notes.hidden=!notes.hidden;btn.textContent=notes.hidden?'Show notes and check':'Hide notes';if(!notes.hidden){S.ticks['seen-'+n.id]=1;save();}});
+ tp.appendChild(d);
+});
+
+/* ---------- quiz ---------- */
+const Q=[
+['nutrition','Calcium is most important in the diet for:',['Carrying oxygen in the blood','Building strong bones and teeth','Providing the body with energy','Healthy eyesight'],1,'Calcium builds bones and teeth. A diet high in calcium (milk, cheese, yoghurt) helps prevent osteoporosis.'],
+['nutrition','Which food would best help a teenager reduce their risk of osteoporosis later in life?',['Apples','White rice','Yoghurt','Chicken breast'],2,'Dairy foods such as yoghurt are rich in calcium. Peak bone mass is built during the teenage years.'],
+['nutrition','Approximately how much of the human body weight is water?',['10%','30%','60%','90%'],2,'Water makes up about 60% of body weight, more than any other nutrient.'],
+['nutrition','The main function of carbohydrates in the diet is to:',['Provide energy','Repair damaged cells','Build bones','Prevent scurvy'],0,'Carbohydrates are the body\'s main energy source. Protein is for growth and repair.'],
+['nutrition','A footballer recovering from a muscle injury needs extra protein because protein:',['Is the main source of vitamins','Is responsible for growth and repair of cells','Adds bulk to the diet','Is the main energy source'],1,'Protein\'s main job is growth and repair of body cells.'],
+['nutrition','Obesity develops when, over a long period:',['Energy input is greater than energy output','Energy output is greater than energy input','Too little water is consumed','Too little calcium is consumed'],0,'Extra energy that is not used is stored as body fat.'],
+['nutrition','Poor nutrition was a problem for early European settlers in Australia mainly because:',['There was no nutrition education','There was not enough food as crops failed to grow','They overcooked their vegetables','They ate too much fast food'],1,'European crops failed in unfamiliar soil and climate, leaving settlers dependent on limited salted rations.'],
+['nutrition','Since the 1980s, which change has occurred in the Australian diet?',['More foods from a variety of cultures','More fast foods','More convenience foods','All of these'],3,'Migration, busier lifestyles and more working parents have increased all three.'],
+['additives','Which is an example of a garnish?',['A preservative added to bread','A lemon wedge and dill on grilled salmon','A marinade for chicken','Cream folded into a mousse'],1,'A garnish is an edible trimming used to enhance the appearance of a dish.'],
+['additives','Glycerol is added to packaged cakes and icing as a humectant. Its job is to:',['Boost the flavour','Thicken the texture','Control moisture so the product stays soft','Change the colour'],2,'Humectants attract and hold moisture, controlling moisture levels in baked products.'],
+['additives','Preservatives are added to food to:',['Slow down spoilage and deterioration','Make bland food tasty','Make food more colourful','Increase nutritional value'],0,'Preservatives slow the growth of micro-organisms such as mould and bacteria.'],
+['additives','An additive that changes the consistency of a gravy so it becomes thicker is a:',['Humectant','Preservative','Thickener','Flavour enhancer'],2,'Thickeners change texture and consistency. Don\'t confuse them with humectants, which control moisture.'],
+['packaging','A major disadvantage of glass packaging is that it:',['Reacts with acidic foods','Is heavy and breaks easily','Cannot be recycled','Hides the product'],1,'Glass is inert, visible and recyclable, but heavy and fragile.'],
+['packaging','Strawberry jam is usually sold in glass jars because glass:',['Is the lightest material','Is see-through, does not react with fruit, and can be hot-filled and sealed','Can be stretched into many shapes','Is the cheapest material'],1,'Visibility, being inert, and handling hot-filling make glass ideal for jam.'],
+['packaging','Which packaging function does an eye-catching brand logo and design serve?',['Contain','Protect','Preserve','Promote'],3,'Design and branding attract consumers: the promote function.'],
+['packaging','Fresh pasta is best packaged in:',['A paper bag','A plastic tray sealed with laminated film','An open cardboard box','A metal can'],1,'A sealed plastic tray with laminated film (often modified atmosphere) keeps fresh pasta from drying out and slows mould.'],
+['labelling','Which of the following must appear on a food label by law?',['A recipe idea','An allergen declaration','A competition entry','A celebrity endorsement'],1,'Allergen declarations are legally required. The others are marketing.'],
+['labelling','Ingredients on a food label must be listed:',['In alphabetical order','In descending order by weight','In order of cost','In any order'],1,'The ingredient used in the largest amount comes first.'],
+['labelling','Which is NOT a legal labelling requirement?',['Use-by or best-before date','Manufacturer\'s name and address','A "buy 2, get 1 free" promotion','Nutrition information panel'],2,'Sales promotions are optional marketing, not a legal requirement.'],
+['labelling','Listing the ingredients on packaged food is an example of:',['Handling requirements','Labelling requirements','Health requirements','Storage requirements'],1,'The ingredient list is one of the labelling requirements of the Food Standards Code.'],
+['development','A supermarket releases its own version of a best-selling chocolate spread. This is a:',['Line extension','Me-too product','New-to-the-world product','Target market'],1,'A me-too (copycat) product copies an already successful product on the market.'],
+['development','A company releases a new salted caramel flavour of its existing biscuit. This is a:',['Line extension','Me-too product','New-to-the-world product','Prototype'],0,'A line extension is a new variation (flavour, size, format) of an existing product.'],
+['development','A target market is:',['A supermarket chain','The entire population','The specific group of people a product is intended for','A sales promotion'],2,'Products are designed for a particular group, e.g. gluten-free bread for people with coeliac disease.'],
+['development','The development of microwave meals is mainly a response to which market concern?',['Technology','Religion','Packaging laws','Seasonality'],0,'New technology (the microwave oven) led to new products. Convenience was also a driver.'],
+['celebrations','Vasilopita, a New Year\'s cake with a coin hidden inside, comes from which cultural heritage?',['Italian','Greek','Chinese','French'],1,'Vasilopita is cut on 1 January; whoever finds the coin has good luck for the year.'],
+['celebrations','Anzac Day is an example of which category of celebration?',['Religious','Social','Historical','Seasonal'],2,'Anzac Day commemorates a historical event.'],
+['celebrations','A wedding anniversary is which category of celebration?',['Social','Religious','Historical','National'],0,'Birthdays, weddings and anniversaries are social celebrations.'],
+['celebrations','Dumplings eaten at Chinese New Year are shaped like old gold ingots to symbolise:',['Long life','Wealth','Good health','Family'],1,'Dumplings stand for wealth. Long noodles stand for long life.'],
+['menu','Why is choosing seasonal produce a good menu planning decision?',['It is usually fresher, tastier and cheaper','It is always organic','It never needs refrigeration','It suits every guest\'s dietary needs'],0,'Seasonal produce is at its peak quality and lowest price.'],
+['menu','A host replaces satay skewers with lemon-herb skewers because a guest has a peanut allergy. Which consideration is this?',['Time of year','Type of occasion','Health status of guests','Available equipment'],2,'Planning around allergies is about the health status of guests and their safety.'],
+['skills','An exam question asks you to "explain". You should:',['Name the item only','Give points for and against','Relate cause and effect, saying how and why','Write one-word answers'],2,'Explain means relate cause and effect: provide why and/or how.'],
+['skills','A "discuss" question asks you to:',['Identify issues and give points for and/or against','Recognise and name','Sketch in general terms','Draw a diagram'],0,'Discuss means identify issues and provide points for and/or against.']
+];
+let qz=null;
+const qb=$('#quizbox');
+function quizStart(mode,only){
+ let pool=Q.map((q,i)=>i);
+ if(only)pool=only; else if(mode!=='all')pool=pool.filter(i=>Q[i][0]===mode);
+ qz={order:shuffle(pool),pos:0,choice:null,conf:null,results:[]};
+ quizQ();
+}
+function quizIntro(){
+ const opts=['all',...Object.keys(TOPICS)].map(k=>`<option value="${k}">${k==='all'?'All topics, mixed (recommended)':TOPICS[k]}</option>`).join('');
+ const best=S.quizBest!=null?`<p class="muted">Your best mixed score so far: <b>${S.quizBest}%</b> over ${S.quizRuns} attempt${S.quizRuns===1?'':'s'}.</p>`:'';
+ qb.innerHTML=`<span class="label">${Q.length} questions</span><h3>Ready?</h3>${best}
+ <div class="row"><label class="label" for="qz-mode">Questions from</label><select id="qz-mode">${opts}</select></div>
+ <div class="row"><button class="btn" id="qz-go">Start quiz</button></div>`;
+ $('#qz-go').addEventListener('click',()=>quizStart($('#qz-mode').value));
+}
+function quizQ(){
+ const i=qz.order[qz.pos],[t,stem,opts]=Q[i];qz.choice=null;qz.conf=null;
+ qb.innerHTML=`<div class="row" style="justify-content:space-between"><span class="pill">${TOPICS[t]}</span><span class="label">Question ${qz.pos+1} of ${qz.order.length}</span></div>
+ <div class="bar"><i style="width:${qz.pos/qz.order.length*100}%"></i></div>
+ <h3 style="font-family:var(--body);font-weight:700;font-size:1.12rem">${stem}</h3>
+ <div class="opts">${opts.map((o,k)=>`<button type="button" class="opt" data-k="${k}" aria-pressed="false"><span class="k">${'ABCD'[k]}</span><span>${o}</span></button>`).join('')}</div>
+ <div class="row conf"><span class="label">How sure are you?</span>${['Sure','Unsure','Guessing'].map(c=>`<button type="button" data-c="${c}" aria-pressed="false">${c}</button>`).join('')}</div>
+ <div class="row"><button class="btn" id="qz-check" disabled>Check answer</button></div><div id="qz-fb"></div>`;
+ const upd=()=>{$('#qz-check').disabled=qz.choice===null||qz.conf===null;};
+ qb.querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>{qb.querySelectorAll('.opt').forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');qz.choice=+b.dataset.k;upd();}));
+ qb.querySelectorAll('.conf button').forEach(b=>b.addEventListener('click',()=>{qb.querySelectorAll('.conf button').forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');qz.conf=b.dataset.c;upd();}));
+ $('#qz-check').addEventListener('click',quizCheck);
+}
+function quizCheck(){
+ const i=qz.order[qz.pos],ans=Q[i][3],ok=qz.choice===ans;
+ qz.results.push({i,ok,conf:qz.conf});
+ qb.querySelectorAll('.opt').forEach(b=>{b.disabled=true;const k=+b.dataset.k;if(k===ans)b.classList.add('right');else if(k===qz.choice)b.classList.add('wrong');});
+ qb.querySelectorAll('.conf button').forEach(b=>b.disabled=true);
+ let extra='';
+ if(!ok&&qz.conf==='Sure')extra='<p><b>You felt sure about this one.</b> Confident mistakes are the most important to fix. Add this to your flashcards or notes.</p>';
+ if(ok&&qz.conf!=='Sure')extra='<p>Correct, but you weren\'t sure. Review this so it becomes automatic.</p>';
+ $('#qz-fb').innerHTML=`<div class="feedback ${ok?'ok':'no'} stack"><b>${ok?'Correct.':'Not quite. The answer is '+'ABCD'[ans]+'.'}</b><p>${Q[i][4]}</p>${extra}</div>`;
+ const c=$('#qz-check');c.textContent=qz.pos+1<qz.order.length?'Next question':'See results';c.onclick=null;
+ c.replaceWith(c.cloneNode(true));
+ $('#qz-check').addEventListener('click',()=>{qz.pos++;qz.pos<qz.order.length?quizQ():quizEnd();});
+ $('#qz-check').focus();
+}
+function quizEnd(){
+ const n=qz.results.length,right=qz.results.filter(r=>r.ok).length,pct=Math.round(right/n*100);
+ if(qz.order.length===Q.length){S.quizRuns=(S.quizRuns||0)+1;S.quizBest=Math.max(S.quizBest||0,pct);save();}
+ const byT={};qz.results.forEach(r=>{const t=Q[r.i][0];byT[t]=byT[t]||[0,0];byT[t][1]++;if(r.ok)byT[t][0]++;});
+ const sureWrong=qz.results.filter(r=>!r.ok&&r.conf==='Sure').length;
+ const missed=qz.results.filter(r=>!r.ok).map(r=>r.i);
+ qb.innerHTML=`<span class="label">Results</span><div class="row"><span class="score">${right}/${n}</span><span class="muted">${pct}%</span></div>
+ <div class="tablebox"><table><thead><tr><th>Topic</th><th>Score</th></tr></thead><tbody>${Object.keys(byT).map(t=>`<tr><td>${TOPICS[t]}</td><td>${byT[t][0]}/${byT[t][1]} ${byT[t][0]<byT[t][1]?'<span class="pill gold">review</span>':''}</td></tr>`).join('')}</tbody></table></div>
+ <p>${sureWrong?`You were <b>sure</b> but wrong on <b>${sureWrong}</b> question${sureWrong>1?'s':''}. Reread those topic notes first.`:'No confident mistakes. Your sense of what you know is accurate.'}</p>
+ <div class="row">${missed.length?'<button class="btn" id="qz-miss">Retry the ones I missed</button>':''}<button class="btn ghost" id="qz-new">New quiz</button></div>`;
+ if(missed.length)$('#qz-miss').addEventListener('click',()=>quizStart(null,missed));
+ $('#qz-new').addEventListener('click',quizIntro);
+}
+quizIntro();
+
+/* ---------- flashcards ---------- */
+const FC=[
+['nutrition','Osteoporosis','A condition of weak, brittle bones. Prevented by calcium-rich foods such as milk, plus weight-bearing exercise.'],
+['nutrition','Protein','Nutrient mainly responsible for growth and repair of body cells.'],
+['nutrition','Carbohydrates','The body\'s main source of energy.'],
+['nutrition','Water','Makes up about 60% of body weight; transports nutrients and controls body temperature.'],
+['nutrition','Obesity','A diet-related disorder caused when energy input is greater than energy output.'],
+['additives','Garnish','An edible food trimming used to enhance the appearance of a dish.'],
+['additives','Humectant','An additive that attracts and holds moisture, controlling moisture levels in baked products, e.g. glycerol.'],
+['additives','Preservative','An additive that slows spoilage and deterioration by stopping the growth of micro-organisms.'],
+['additives','Emulsifier','An additive that keeps oil and water mixed, e.g. lecithin.'],
+['packaging','Four functions of packaging','Contain, protect, preserve, promote (and inform).'],
+['packaging','Glass: pros and cons','Pros: visible, inert, hot-fill, recyclable. Cons: heavy, breakable.'],
+['packaging','Laminate','Packaging made of layers (e.g. plastic, foil, paper) that combine the strengths of each.'],
+['packaging','Modified atmosphere packaging (MAP)','Air in the pack is replaced with gases that slow spoilage, e.g. fresh pasta.'],
+['packaging','Best packaging for strawberry jam','Glass jar with metal lid: hot-filled, vacuum sealed, visible, resealable.'],
+['labelling','Food Standards Code','The legal rules (set by FSANZ) for labelling and composition of food in Australia and New Zealand.'],
+['labelling','Order of ingredients','Descending order by weight: largest amount first.'],
+['labelling','Use-by vs best-before','Use-by: do not eat after this date (safety). Best-before: may lose quality but still safe.'],
+['labelling','Not a legal labelling requirement','Sales promotions, recipes, competitions.'],
+['development','Line extension','A new variation (flavour, size, format) of an existing product.'],
+['development','Me-too product','A product that copies an already successful product on the market.'],
+['development','New-to-the-world product','A completely new product that has never existed before.'],
+['development','Target market','The specific group of people for whom a product is intended.'],
+['development','Four market concerns','Health, environment, cost, technology.'],
+['celebrations','Three categories of celebration','Religious, historical, social.'],
+['celebrations','Religious celebrations (3)','Easter, Christmas, Ramadan (also Passover, Diwali).'],
+['celebrations','Historical celebrations (3)','Australia Day, Anzac Day, Thanksgiving.'],
+['celebrations','Social celebrations (3)','Birthdays, anniversaries, weddings.'],
+['celebrations','Vasilopita','Greek New Year cake with a hidden coin. Whoever finds it has good luck all year.'],
+['celebrations','Chinese New Year dumplings','Shaped like gold ingots to symbolise wealth; made together by families on New Year\'s Eve.'],
+['menu','Four menu planning considerations','Type of occasion, time of year, available resources, health status of guests.'],
+['menu','Temperature danger zone','5 °C to 60 °C, where bacteria multiply fastest. Keep cold food cold and hot food hot.'],
+['skills','Explain','Relate cause and effect; provide why and/or how.'],
+['skills','Discuss','Identify issues and provide points for and/or against.'],
+['skills','Outline','Sketch in general terms; indicate the main features.']
+];
+const fcSel=$('#fc-topic');
+fcSel.innerHTML=['all',...Object.keys(TOPICS)].map(k=>`<option value="${k}">${k==='all'?'All topics':TOPICS[k]}</option>`).join('');
+let fcQueue=[],fcCur=null;
+const box=i=>S.fc[i]||0; // 0 new, 1 didn't know, 2 shaky, 3 knew
+function fcBuild(){
+ const t=fcSel.value;let ids=FC.map((c,i)=>i).filter(i=>t==='all'||FC[i][0]===t);
+ const pri={0:1,1:0,2:2,3:3};
+ fcQueue=shuffle(ids).sort((a,b)=>pri[box(a)]-pri[box(b)]);
+ fcBoxes();fcNext();
+}
+function fcBoxes(){
+ const t=fcSel.value,ids=FC.map((c,i)=>i).filter(i=>t==='all'||FC[i][0]===t);
+ const cnt=[0,0,0,0];ids.forEach(i=>cnt[box(i)]++);
+ $('#fc-boxes').innerHTML=`<div><b style="color:var(--bad)">${cnt[1]}</b><span class="label">Didn't know</span></div><div><b style="color:var(--gold)">${cnt[2]}</b><span class="label">Shaky</span></div><div><b style="color:var(--good)">${cnt[3]}</b><span class="label">Knew it</span></div>`;
+}
+function fcNext(){
+ const a=$('#fc-area');
+ if(!fcQueue.length){a.innerHTML=`<div class="card"><h3>Round finished</h3><p>Come back later today or tomorrow. Spacing out your practice is what moves cards into "Knew it" for good.</p><div class="row"><button class="btn" id="fc-again">Go again</button></div></div>`;$('#fc-again').addEventListener('click',fcBuild);return;}
+ fcCur=fcQueue.shift();const [t,term,def]=FC[fcCur];
+ a.innerHTML=`<button class="flash" data-flipped="false" type="button" aria-label="Flip card"><div class="flash-inner">
+  <div class="face"><span class="label">${TOPICS[t]}</span><span class="term">${term}</span><span class="muted" style="font-size:.9rem">Say the answer, then tap to flip</span></div>
+  <div class="face back"><span class="label">${term}</span><p style="font-size:1.1rem">${def}</p></div></div></button>
+  <div class="row" id="fc-rate" hidden><span class="label">How did you go?</span>
+  <button class="btn ghost" data-b="1">Didn't know</button><button class="btn ghost" data-b="2">Shaky</button><button class="btn" data-b="3">Knew it</button></div>
+  <p class="muted" style="font-size:.85rem">${fcQueue.length} card${fcQueue.length===1?'':'s'} left in this round</p>`;
+ const f=a.querySelector('.flash');
+ f.addEventListener('click',()=>{f.dataset.flipped=f.dataset.flipped!=='true';$('#fc-rate').hidden=false;});
+ a.querySelectorAll('#fc-rate button').forEach(b=>b.addEventListener('click',()=>{const v=+b.dataset.b;S.fc[fcCur]=v;save();
+  if(v===1)fcQueue.splice(Math.min(3,fcQueue.length),0,fcCur); // see it again soon
+  fcBoxes();fcNext();}));
+}
+fcSel.addEventListener('change',fcBuild);
+$('#fc-reset').addEventListener('click',()=>{S.fc={};save();fcBuild();});
+fcBuild();
+
+/* ---------- short answers ---------- */
+const SA=[
+{id:'q16a',n:'16 (a)',m:6,verb:'Discuss',q:'Discuss THREE reasons for packaging foods.',
+ guide:'Discuss = give points for and/or against. Aim for 3 reasons × 2 marks: name the reason, explain it with a food example, and where you can, add a limitation.',
+ pts:['Named three different functions (contain, protect, preserve, promote/inform)','Explained HOW each function helps, not just named it','Gave a specific food example for each','Included at least one point "against" or a limitation (e.g. cost, environmental waste)'],
+ model:`<p><b>Preserve:</b> packaging extends shelf life by keeping out oxygen, moisture, light and micro-organisms. For example, canned tomatoes are sealed and heat-processed so they last for years. This reduces food waste.</p>
+<p><b>Protect:</b> packaging stops food being crushed, contaminated by dirt or pests, or tampered with. Egg cartons cushion fragile eggs, and tamper-evident seals on jars show consumers the product is safe.</p>
+<p><b>Promote and inform:</b> attractive branding persuades consumers to buy, while the label gives legally required information such as allergens and use-by dates so consumers can make safe choices.</p>
+<p><b>However,</b> packaging adds to the cost of food and creates waste, so manufacturers are moving to recyclable and reduced packaging to meet environmental concerns.</p>`},
+{id:'q16b',n:'16 (b)',m:3,verb:'Describe',q:'Describe an appropriate packaging material for ONE of the following food products: pizza sauce, fresh pasta, strawberry jam.',
+ guide:'Describe = give characteristics and features. Name the material, give its properties, and link each property to what that food needs.',
+ pts:['Named an appropriate material for the chosen food','Described two or more properties of the material','Linked the properties to the needs of the food (e.g. acidity, freshness, visibility)'],
+ model:`<p><b>Strawberry jam: glass jar with a lacquered metal screw lid.</b> Glass is inert, so it will not react with the acid in the strawberries or affect flavour. It can withstand hot-filling, so as the jam cools a vacuum seal forms under the lid, preserving the jam. Glass is transparent, letting consumers see the jam's colour, and the lid can be resealed after opening. The jar can also be reused or recycled.</p>
+<p class="muted">Other strong choices: pizza sauce in a glass jar, can or laminated foil pouch; fresh pasta in a plastic tray sealed with laminated film (modified atmosphere), kept refrigerated.</p>`},
+{id:'q17',n:'17',m:6,verb:'Identify / Describe',q:'Identify a specific cultural celebration or event. Describe the foods consumed at this event or celebration. Include specific ingredients, how the food is prepared/cooked and the significance of the food to this event.',
+ guide:'Four things to cover: culture + celebration, specific ingredients, preparation/cooking method, significance. Two foods described well beat five foods named.',
+ pts:['Named the culture AND the celebration','Listed specific ingredients for at least one food','Described how the food is prepared or cooked','Explained the significance or symbolism of the food','Described at least two foods'],
+ model:`<p><b>Culture:</b> Chinese · <b>Celebration:</b> Chinese New Year (Spring Festival)</p>
+<p><b>Dumplings (jiaozi)</b> are made from a wheat-flour and water dough rolled into thin wrappers, filled with pork mince, Chinese cabbage, ginger and spring onion. They are folded and pleated into the shape of ancient gold ingots, then boiled, steamed or pan-fried. Families make them together on New Year's Eve, and their shape symbolises wealth and prosperity for the year ahead.</p>
+<p><b>A whole steamed fish</b> with ginger, spring onion and soy sauce is served with its head and tail intact. The word for fish (yú) sounds like the word for surplus, so it represents abundance from the beginning to the end of the year.</p>`},
+{id:'q18',n:'18',m:3,verb:'Identify / Recall',q:'Food plays an important role in celebrations. Identify the three categories we can classify celebrations into and recall 3 reasons for celebration in each category.',
+ guide:'One mark per category with its three examples. Quick and precise: no need for long sentences.',
+ pts:['Religious + three examples','Historical + three examples','Social + three examples'],
+ model:`<p><b>1. Religious:</b> Easter, Ramadan, Christmas (also Passover)</p><p><b>2. Historical:</b> Australia Day, Anzac Day, Thanksgiving</p><p><b>3. Social:</b> birthday, anniversary, wedding</p>`},
+{id:'q19',n:'19',m:4,verb:'Outline',q:'Outline FOUR market concerns that have led to the development of food products.',
+ guide:'Outline = main features. One mark each: name the concern and give one sentence or product example.',
+ pts:['Health, with an example','Environment, with an example','Cost, with an example','Technology, with an example'],
+ model:`<p><b>Health:</b> consumers want healthier foods, leading to reduced-fat, low-sugar and gluten-free products.</p><p><b>Environment:</b> concern about waste and sustainability has led to recyclable packaging and plant-based meat alternatives.</p><p><b>Cost:</b> consumers want value for money, leading to cheaper supermarket home-brand products.</p><p><b>Technology:</b> new technology creates new products, such as microwave meals and long-life UHT milk.</p>`},
+{id:'q20',n:'20',m:3,verb:'Describe',q:'Describe the THREE types of food product development.',
+ guide:'One mark each: name the type and say what makes it different, ideally with an example.',
+ pts:['Line extension described','Me-too / copycat described','New to the world described'],
+ model:`<p><b>Line extension:</b> a new variation of a product already on the market, such as a new flavour or size of an existing biscuit.</p><p><b>Me-too (copycat):</b> a product that copies an already successful product from another company, such as a supermarket's own-brand version of a popular cereal.</p><p><b>New to the world:</b> a completely new, innovative product that has never existed before, such as the first microwave popcorn.</p>`}
+];
+const sl=$('#shortlist');
+SA.forEach(s=>{
+ const c=el('div',{class:'card',id:'sa-'+s.id});
+ c.innerHTML=`<div class="row" style="justify-content:space-between;align-items:flex-start"><span class="label">Question ${s.n} · <span class="verb">${s.verb}</span></span><span class="marks">${s.m} marks</span></div>
+ <p style="font-weight:700;font-size:1.06rem">${s.q}</p>
+ <div class="tip" style="font-size:.95rem">${s.guide}</div>
+ <label class="label" for="ans-${s.id}">Your answer</label>
+ <textarea id="ans-${s.id}" placeholder="Write your answer before checking."></textarea>
+ <div class="row"><button class="btn" type="button">Check my answer</button><span class="muted" style="font-size:.85rem" data-hint>Write at least a sentence first.</span></div>
+ <div class="stack" data-reveal hidden>
+  <span class="label">Tick what your answer includes</span>
+  <div class="stack">${s.pts.map((p,k)=>`<label class="check"><input type="checkbox" id="ck-${s.id}-${k}"><span>${p}</span></label>`).join('')}</div>
+  <p data-tally class="muted"></p>
+  <div class="model"><span class="label">Model answer</span>${s.model}</div>
+  <p class="muted" style="font-size:.9rem">Now improve your own answer: add whatever you left out, in your own words.</p>
+ </div>`;
+ const ta=c.querySelector('textarea'),btn=c.querySelector('button'),rev=c.querySelector('[data-reveal]'),hint=c.querySelector('[data-hint]');
+ ta.value=S.drafts[s.id]||'';
+ const upd=()=>{const ok=ta.value.trim().length>=25;btn.disabled=!ok;hint.hidden=ok;};
+ ta.addEventListener('input',()=>{S.drafts[s.id]=ta.value;save();upd();});upd();
+ btn.addEventListener('click',()=>{rev.hidden=!rev.hidden;btn.textContent=rev.hidden?'Check my answer':'Hide model answer';});
+ const boxes=[...c.querySelectorAll('input[type=checkbox]')],tally=c.querySelector('[data-tally]');
+ const tl=()=>{const n=boxes.filter(b=>b.checked).length;tally.textContent=`You covered ${n} of ${boxes.length} marking points.`;};
+ boxes.forEach((b,k)=>{b.checked=!!S.ticks[b.id];b.addEventListener('change',()=>{S.ticks[b.id]=b.checked?1:0;save();tl();});});tl();
+ sl.appendChild(c);
+});
+
+/* ---------- essay ---------- */
+const CONS={
+ occasion:['Type of occasion','The occasion sets the formality, theme, service style and which foods are expected or symbolic. A plated three-course dinner suits a wedding; finger food suits a child\'s party. Matching the menu to the occasion makes guests feel comfortable and makes the event memorable.'],
+ season:['Time of year','Seasonal produce is fresher, tastier and cheaper. The weather affects what guests want to eat (cold salads in summer, warm roasts in winter) and how food must be stored. In hot weather, food must be kept out of the temperature danger zone (5–60 °C) to prevent food poisoning.'],
+ resources:['Available resources','Budget, facilities (oven and fridge space), equipment, number and skill of staff, and preparation time. A menu that is too ambitious for the kitchen or the people cooking leads to late, poorly cooked or unsafe food.'],
+ health:['Health status of guests','Allergies (nuts, shellfish), intolerances (coeliac), medical conditions (diabetes) and religious or ethical diets (halal, kosher, vegetarian). Planning for these keeps every guest safe and included.']
+};
+let chosen=S.drafts.essayCons||[];
+const consEl=$('#cons');
+function renderCons(){
+ consEl.innerHTML=Object.keys(CONS).map(k=>`<button type="button" class="chip" data-k="${k}" aria-pressed="${chosen.includes(k)}">${CONS[k][0]}</button>`).join('');
+ consEl.querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>{const k=b.dataset.k;
+  if(chosen.includes(k))chosen=chosen.filter(x=>x!==k);else{if(chosen.length>=3)chosen.shift();chosen.push(k);}
+  S.drafts.essayCons=chosen;save();renderCons();}));
+ $('#cons-info').innerHTML=chosen.length?chosen.map(k=>`<div class="model"><span class="label">${CONS[k][0]}</span><p>${CONS[k][1]}</p></div>`).join(''):'<p class="muted">Pick three. Choose the ones you can give the best examples for.</p>';
+ const tp=$('#teel-plans');
+ tp.innerHTML=chosen.map((k,n)=>`<div class="card"><span class="label">Paragraph ${n+1} · ${CONS[k][0]}</span>
+ ${['T','E','E2','L'].map(p=>`<label class="label" for="pl-${k}-${p}">${{T:'Topic sentence',E:'Explain (how and why)',E2:'Example',L:'Link to success'}[p]}</label><input type="text" id="pl-${k}-${p}" value="${(S.drafts['pl-'+k+'-'+p]||'').replace(/"/g,'&quot;')}">`).join('')}</div>`).join('');
+ tp.querySelectorAll('input').forEach(i=>i.addEventListener('input',()=>{S.drafts[i.id]=i.value;save();}));
+}
+renderCons();
+const ed=$('#essay-draft'),wc=$('#wc');
+ed.value=S.drafts.essay||'';
+const cw=()=>{wc.textContent=(ed.value.trim().match(/\S+/g)||[]).length;};cw();
+ed.addEventListener('input',()=>{S.drafts.essay=ed.value;save();cw();});
+let left=1800,iv=null;
+const fmt=s=>`${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+$('#tm-start').addEventListener('click',e=>{
+ if(iv){clearInterval(iv);iv=null;e.target.textContent='Resume';return;}
+ e.target.textContent='Pause';
+ iv=setInterval(()=>{left--;$('#timer').textContent=fmt(Math.max(left,0));if(left<=0){clearInterval(iv);iv=null;$('#timer').textContent='Time!';e.target.textContent='Start';left=1800;}},1000);
+});
+$('#tm-reset').addEventListener('click',()=>{clearInterval(iv);iv=null;left=1800;$('#timer').textContent='30:00';$('#tm-start').textContent='Start';});
+
+/* ---------- progress ---------- */
+function renderProgress(){
+ const seen=Object.keys(TOPICS).filter(k=>S.ticks['seen-'+k]).length;
+ const known=Object.values(S.fc).filter(v=>v===3).length;
+ const sa=SA.filter(s=>(S.drafts[s.id]||'').trim().length>=25).length;
+ $('#progress').innerHTML=[
+  [`${seen}/${NOTES.length}`,'topics checked'],
+  [S.quizBest!=null?S.quizBest+'%':'–','best quiz score'],
+  [`${known}/${FC.length}`,'flashcards known'],
+  [`${sa}/${SA.length}`,'short answers drafted'],
+  [(S.drafts.essay||'').trim()?'Started':'Not yet','essay']
+ ].map(([v,l])=>`<span class="pill gold" style="font-size:.8rem;padding:7px 10px">${v} ${l}</span>`).join('');
+}
+renderProgress();
+})();
+</script>
